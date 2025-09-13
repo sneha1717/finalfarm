@@ -4,10 +4,14 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+// import { scheduleRecurringPayments } from './utils/recurringPayments.js';
 
 // Import routes
 import authRoutes from './routes/auth.js';
 import ngoRoutes from './routes/ngo.js';
+// import paymentRoutes from './routes/payment.js';
+import directPaymentRoutes from './routes/directPaymentSimple.js';
+import kycRoutes from './routes/kycRoutes.js';
 
 dotenv.config();
 
@@ -32,11 +36,7 @@ app.use(limiter);
 
 // CORS configuration
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL || 'http://localhost:8080',
-    'http://localhost:5173',
-    'http://localhost:8080'
-  ],
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:8080', 'http://localhost:8081', 'http://localhost:8082'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -49,6 +49,9 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/ngo', ngoRoutes);
+// app.use('/api/payment', paymentRoutes);
+app.use('/api/direct-payment', directPaymentRoutes);
+app.use('/api/kyc', kycRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -79,6 +82,10 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/farmvilla
 })
 .then(() => {
   console.log('Connected to MongoDB');
+  
+  // Initialize recurring payments scheduler
+  // scheduleRecurringPayments();
+  
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });

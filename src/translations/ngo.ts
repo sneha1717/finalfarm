@@ -50,7 +50,7 @@ export const ngoTranslations = {
     'ngo.documents': 'Documents',
     
     // Go Green Page
-    'gogreen.title': 'Go Green',
+    'gogreen.title': 'Go Green Initiative',
     'gogreen.helpfulAnimals': 'Helpful Animals',
     'gogreen.beneficialPlants': 'Beneficial Plants',
     'gogreen.greenTechnology': 'Green Technology',

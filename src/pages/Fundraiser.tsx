@@ -1,243 +1,166 @@
-import React, { useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { HeartHandshake, IndianRupee, MapPin } from "lucide-react";
-
-interface Cause {
-  id: string;
-  title: string;
-  description: string;
-  images: string[];
-  defaultNote: string;
-  defaultUpiId: string;
-  defaultAmount: number;
-  goalAmount: number;
-  areas: string[];
-}
-
-const causes: Cause[] = [
-  {
-    id: "water",
-    title: "Water-Scarce Areas: Drip Irrigation",
-    description:
-      "Smart drip irrigation systems deliver water directly to roots, reducing usage by up to 70% compared to traditional methods.",
-    images: ["/drip2.jpg", "/drip2.jpg", "/drip3.jpg"],
-    defaultNote: "Support drip irrigation",
-    defaultUpiId: "dripfund@upi",
-    defaultAmount: 500,
-    goalAmount: 50000,
-    areas: ["Palakkad", "Idukki", "Wayanad"],
-  },
-  {
-    id: "electricity",
-    title: "Electricity-Scarce Areas: Solar Water Pumps",
-    description:
-      "Solar pumps provide a low-cost, reliable irrigation solution in areas with limited or no electricity.",
-    images: ["/solar.jpg", "/solar2.webp", "/solar3.png"],
-    defaultNote: "Support solar pumps",
-    defaultUpiId: "solarfund@upi",
-    defaultAmount: 1000,
-    goalAmount: 75000,
-    areas: ["Attappady (Palakkad)", "Tribal hamlets in Wayanad", "Idukki high ranges"],
-  },
-  {
-    id: "baler",
-    title: "Crop Residue Utilization: Balers",
-    description:
-      "Balers collect and compress crop residue into bales for animal feed, bedding, or biofuel production, giving farmers extra income.",
-    images: ["/baler2.png", "/baler3.jpg", "/baler4.jpg"],
-    defaultNote: "Support baler machines",
-    defaultUpiId: "balerfund@upi",
-    defaultAmount: 750,
-    goalAmount: 60000,
-    areas: ["Kuttanad (Alappuzha)", "Thrissur", "Palakkad plains"],
-  },
-];
-
-const DonationCard: React.FC<{ cause: Cause }> = ({ cause }) => {
-  const [name, setName] = useState("");
-  const [upiId, setUpiId] = useState(cause.defaultUpiId);
-  const [amount, setAmount] = useState<number>(cause.defaultAmount);
-  const [note, setNote] = useState(cause.defaultNote);
-  const [donated, setDonated] = useState(0);
-
-  const upiDeepLink = useMemo(() => {
-    if (!upiId || amount <= 0) return "";
-    const pn = encodeURIComponent(name || "Krishi Sakhi");
-    const pa = encodeURIComponent(upiId);
-    const am = encodeURIComponent(String(amount));
-    const tn = encodeURIComponent(note);
-    return `upi://pay?pa=${pa}&pn=${pn}&am=${am}&tn=${tn}&cu=INR`;
-  }, [upiId, name, amount, note]);
-
-  const handleDonation = () => {
-    setDonated((prev) => prev + amount);
-  };
-
-  const progress = Math.min((donated / cause.goalAmount) * 100, 100);
-
-  const tiers = [100, 250, 500, 1000, 2500];
-
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 600,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 2500,
-    arrows: true,
-  };
-
-  return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-      <Card className="bg-gradient-card border-border/50 shadow-card mb-8 overflow-hidden">
-        {/* ✅ Slideshow seamlessly on top */}
-        <div className="w-full overflow-hidden rounded-t-xl">
-          <Slider {...sliderSettings}>
-            {cause.images.map((img, idx) => (
-              <div key={idx} className="flex justify-center">
-                <img
-                  src={img}
-                  alt={`${cause.title} ${idx + 1}`}
-                  className="w-full h-72 object-cover"
-                />
-              </div>
-            ))}
-          </Slider>
-        </div>
-
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <IndianRupee className="h-5 w-5 text-primary" /> {cause.title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Progress Bar */}
-          <div>
-            <div className="flex justify-between text-xs mb-1 text-muted-foreground">
-              <span>Raised: ₹{donated}</span>
-              <span>Goal: ₹{cause.goalAmount}</span>
-            </div>
-            <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="h-3 bg-lime-500"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-            <p className="text-xs mt-1 text-muted-foreground">
-              ₹{Math.max(cause.goalAmount - donated, 0)} still needed
-            </p>
-          </div>
-
-          <p className="text-sm text-muted-foreground">{cause.description}</p>
-
-          {/* Areas */}
-          <div className="bg-gray-50 p-3 rounded-lg border text-sm">
-            <div className="flex items-center gap-2 font-medium mb-2 text-primary">
-              <MapPin className="h-4 w-4" /> Focus Areas in Kerala
-            </div>
-            <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-              {cause.areas.map((area, idx) => (
-                <li key={idx}>{area}</li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Tier Buttons */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-            {tiers.map((v) => (
-              <Button
-                key={v}
-                variant={amount === v ? "default" : "outline"}
-                className={`h-10 ${
-                  amount === v
-                    ? "bg-lime-500 hover:bg-lime-500/90 text-black"
-                    : ""
-                }`}
-                onClick={() => setAmount(v)}
-              >
-                ₹{v}
-              </Button>
-            ))}
-          </div>
-
-          {/* Inputs */}
-          <div className="grid md:grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs text-muted-foreground">Full name</label>
-              <Input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground">UPI ID</label>
-              <Input
-                value={upiId}
-                onChange={(e) => setUpiId(e.target.value)}
-                placeholder="yourname@bank"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground">Amount (₹)</label>
-              <Input
-                type="number"
-                min={1}
-                inputMode="numeric"
-                value={amount}
-                onChange={(e) =>
-                  setAmount(Math.max(1, Number(e.target.value)))
-                }
-              />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground">Note</label>
-              <Input
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="Purpose"
-              />
-            </div>
-          </div>
-
-          {/* Pay by UPI */}
-          {upiDeepLink && (
-            <Button
-              className="w-full bg-lime-500 hover:bg-lime-500/90 text-black font-semibold"
-              asChild
-              onClick={handleDonation}
-            >
-              <a href={upiDeepLink}>Pay by UPI</a>
-            </Button>
-          )}
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-};
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
+import { 
+  Droplets,
+  Zap,
+  Wheat
+} from 'lucide-react';
+import RecentDonationCard from '../components/RecentDonationCard';
+import DonationCategorySelector from '../components/DonationCategorySelector';
 
 const Fundraiser: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 p-4">
-      <div className="max-w-5xl mx-auto pt-10">
-        <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
-            <HeartHandshake className="h-6 w-6 text-primary" /> Farmers' Help Fund
-          </h1>
-        </div>
+    <motion.div 
+      className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50"
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid lg:grid-cols-4 gap-8">
+          {/* Main Content - All Causes */}
+          <div className="lg:col-span-3 space-y-8">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                FarmVilla Foundation - Agricultural Support
+              </h1>
+              <p className="text-lg text-gray-600">
+                Supporting sustainable farming practices across Kerala
+              </p>
+            </div>
 
-        {causes.map((cause) => (
-          <DonationCard key={cause.id} cause={cause} />
-        ))}
+            {/* Water-Scarce Areas: Drip Irrigation */}
+            <Card className="overflow-hidden shadow-lg">
+              <div className="h-64">
+                <img
+                  src="/drip.jpg"
+                  alt="Drip Irrigation System"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <CardHeader className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-2xl font-bold flex items-center gap-2">
+                    <Droplets className="w-6 h-6" />
+                    Water-Scarce Areas: Drip Irrigation
+                  </CardTitle>
+                  <Badge variant="secondary" className="bg-white text-blue-600">
+                    Water Conservation
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                <p className="text-gray-700 mb-4">
+                  Smart drip irrigation systems deliver water directly to roots, reducing water usage by 40-60% 
+                  while increasing crop yields. Essential for drought-prone regions in Kerala.
+                </p>
+                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                  <h4 className="font-semibold text-blue-800 mb-2">Impact Areas:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-blue-700">
+                    <li>Palakkad - Rice and vegetable farms</li>
+                    <li>Wayanad - Spice plantations</li>
+                    <li>Idukki - Tea and cardamom estates</li>
+                    <li>Thrissur - Coconut groves</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Electricity-Scarce Areas: Solar Water Pumps */}
+            <Card className="overflow-hidden shadow-lg">
+              <div className="h-64 bg-gradient-to-br from-yellow-100 to-orange-100 flex items-center justify-center">
+                <div className="text-center">
+                  <Zap className="w-16 h-16 text-orange-500 mx-auto mb-4" />
+                  <p className="text-orange-700 font-semibold">Solar Water Pump System</p>
+                  <p className="text-orange-600 text-sm">Renewable Energy Solution</p>
+                </div>
+              </div>
+              <CardHeader className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-2xl font-bold flex items-center gap-2">
+                    <Zap className="w-6 h-6" />
+                    Electricity-Scarce Areas: Solar Water Pumps
+                  </CardTitle>
+                  <Badge variant="secondary" className="bg-white text-orange-600">
+                    Renewable Energy
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                <p className="text-gray-700 mb-4">
+                  Solar-powered water pumps provide reliable irrigation without electricity costs. 
+                  Reduces operational expenses by 80% and ensures consistent water supply.
+                </p>
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                  <h4 className="font-semibold text-yellow-800 mb-2">Target Regions:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-yellow-700">
+                    <li>Kasaragod - Remote coastal farms</li>
+                    <li>Kannur - Hillside plantations</li>
+                    <li>Kozhikode - Pepper and rubber estates</li>
+                    <li>Malappuram - Small-scale farming</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Crop Residue Utilization: Balers */}
+            <Card className="overflow-hidden shadow-lg">
+              <div className="h-64">
+                <img
+                  src="/baler.jpg"
+                  alt="Agricultural Baler Machine"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-2xl font-bold flex items-center gap-2">
+                    <Wheat className="w-6 h-6" />
+                    Crop Residue Utilization: Balers
+                  </CardTitle>
+                  <Badge variant="secondary" className="bg-white text-green-600">
+                    Waste Management
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6">
+                <p className="text-gray-700 mb-4">
+                  Modern balers convert crop residue into valuable bales for livestock feed, 
+                  biofuel, and organic fertilizer. Reduces burning and creates additional income streams.
+                </p>
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <h4 className="font-semibold text-green-800 mb-2">Implementation Areas:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-green-700">
+                    <li>Kottayam - Paddy field residue management</li>
+                    <li>Alappuzha - Rice straw utilization</li>
+                    <li>Ernakulam - Mixed crop residue processing</li>
+                    <li>Pathanamthitta - Sustainable farming practices</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Donation Category Selector */}
+            <div className="mt-12">
+              <DonationCategorySelector 
+                onCategorySelect={(categoryId) => {
+                  console.log('Category selected:', categoryId);
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Right Sidebar - Recent Donation Only */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-6">
+              <RecentDonationCard />
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

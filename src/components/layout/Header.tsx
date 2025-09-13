@@ -8,6 +8,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import WeatherNotifications from '@/components/weather/WeatherNotifications';
+import KYCModal from '@/components/KYCModal';
+import KYCNGOModal from '@/components/KYCNGOModal';
+import LoginModal from '@/components/LoginModal';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +27,9 @@ const Header: React.FC = () => {
   const { t } = useLanguage();
   const { user, isAuthenticated, logout } = useAuth();
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const [showKYCFarmerModal, setShowKYCFarmerModal] = useState(false);
+  const [showKYCNGOModal, setShowKYCNGOModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const navItems = [
     { href: '/dashboard', label: t('nav.dashboard') },
@@ -81,6 +87,36 @@ const Header: React.FC = () => {
         <div className="flex items-center gap-4">
           <LanguageSelector />
           
+          {/* KYC and Login Buttons - Only show when not authenticated */}
+          {!isAuthenticated && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowKYCFarmerModal(true)}
+                className="text-xs px-3 py-1 h-8 border-green-300 hover:bg-green-50 text-green-700"
+              >
+                KYC FARMER 🌾
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowKYCNGOModal(true)}
+                className="text-xs px-3 py-1 h-8 border-blue-300 hover:bg-blue-50 text-blue-700"
+              >
+                KYC NGO 🏢
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowLoginModal(true)}
+                className="text-xs px-3 py-1 h-8 border-purple-300 hover:bg-purple-50 text-purple-700"
+              >
+                LOGIN 🔐
+              </Button>
+            </div>
+          )}
+          
           {/* Weather Notifications - Only show when authenticated */}
           {isAuthenticated && (
             <Popover open={notificationOpen} onOpenChange={setNotificationOpen}>
@@ -122,11 +158,7 @@ const Header: React.FC = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <Button asChild variant="default" className="bg-gradient-primary hover:opacity-90">
-              <Link to="/login">{t('hero.login')}</Link>
-            </Button>
-          )}
+          ) : null}
 
           {/* Mobile menu */}
           {isAuthenticated && (
@@ -145,6 +177,11 @@ const Header: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* KYC and Login Modals */}
+      <KYCModal isOpen={showKYCFarmerModal} onClose={() => setShowKYCFarmerModal(false)} />
+      <KYCNGOModal isOpen={showKYCNGOModal} onClose={() => setShowKYCNGOModal(false)} />
+      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </motion.header>
   );
 };

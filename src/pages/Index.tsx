@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, Bot, Cloud, TrendingUp, Users, Leaf, MessageCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Users, Target, Heart, Leaf, Droplets, Zap, Bot, Cloud, TrendingUp, MessageCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import { useLanguage } from "@/contexts/LanguageContext";
+import KYCModal from "@/components/KYCModal";
+import LoginModal from "@/components/LoginModal";
 import { useAuth } from '@/contexts/AuthContext';
+import { Card, CardContent } from "@/components/ui/card";
 import heroImage from '@/assets/kerala-farming-hero.jpg';
 
 const Index = () => {
   const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
+  const [isKYCModalOpen, setIsKYCModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const features = [
     {
@@ -113,24 +117,14 @@ const Index = () => {
                 ) : (
                   <>
                     <Button 
-                      asChild 
+                      onClick={() => setIsLoginModalOpen(true)}
                       size="lg" 
                       className="bg-gradient-primary hover:opacity-90 text-primary-foreground font-medium h-12 px-8"
                     >
-                      <Link to="/login" className="flex items-center gap-2">
-                        {t('hero.cta')}
+                      <div className="flex items-center gap-2">
+                        Login
                         <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                    <Button 
-                      asChild 
-                      variant="outline" 
-                      size="lg"
-                      className="h-12 px-8 border-primary/30 hover:bg-primary/10"
-                    >
-                      <Link to="/login">
-                        {t('hero.login')}
-                      </Link>
+                      </div>
                     </Button>
                     <Button
                       asChild
@@ -251,6 +245,16 @@ const Index = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Modals */}
+      <KYCModal 
+        isOpen={isKYCModalOpen} 
+        onClose={() => setIsKYCModalOpen(false)} 
+      />
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
     </div>
   );
 };

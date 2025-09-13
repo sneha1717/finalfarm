@@ -124,14 +124,26 @@ const NGOLogin: React.FC = () => {
     setLoading(true);
 
     try {
-      const result = await apiService.login(loginForm);
+      const response = await fetch('http://localhost:5001/api/kyc/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          identifier: loginForm.email,
+          password: loginForm.password
+        }),
+      });
+
+      const result = await response.json();
 
       if (result.success && result.data) {
-        login(result.data.ngo, undefined, 'ngo');
+        // Store user data in localStorage
+        localStorage.setItem('user', JSON.stringify(result.data));
         
         toast({
           title: "Login successful!",
-          description: `Welcome back, ${result.data.ngo.organizationName}!`,
+          description: `Welcome back, ${result.data.name}!`,
         });
         
         navigate('/profile');
@@ -143,6 +155,7 @@ const NGOLogin: React.FC = () => {
         });
       }
     } catch (error) {
+      console.error('Login error:', error);
       toast({
         title: "Connection error",
         description: "Please make sure the backend server is running",
