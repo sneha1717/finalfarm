@@ -122,7 +122,7 @@ const NGO: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <Button variant="outline" asChild className="gap-2">
-                <a href="/login?role=ngo"><LogIn className="h-4 w-4" /> Login as NGO</a>
+                <a href="/ngo-login"><LogIn className="h-4 w-4" /> Login as NGO</a>
               </Button>
               <Button onClick={addNGO} className="gap-2"><Plus className="h-4 w-4" /> Add your NGO</Button>
             </div>

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Language } from '@/types';
+import { ngoTranslations } from '@/translations/ngo';
 
 interface LanguageContextType {
   language: Language;
@@ -337,6 +338,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [language]);
 
   const t = (key: string): string => {
+    // First check NGO translations
+    const ngoTranslation = ngoTranslations[language]?.[key as keyof typeof ngoTranslations[typeof language]];
+    if (ngoTranslation) {
+      return ngoTranslation;
+    }
+    
+    // Then check main translations
     return translations[language][key as keyof typeof translations[typeof language]] || key;
   };
 

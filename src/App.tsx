@@ -21,6 +21,8 @@ import Fundraiser from "./pages/Fundraiser";
 import NotificationDetails from "./pages/NotificationDetails";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
+import NGOLogin from "./pages/NGOLogin";
+import NGODashboard from './pages/NGODashboard';
 
 const queryClient = new QueryClient();
 
@@ -44,6 +46,8 @@ const App = () => (
                 <Route path="/crops" element={<Crops />} />
                 <Route path="/market" element={<Market />} />
                 <Route path="/ngo" element={<NGO />} />
+                <Route path="/ngo-login" element={<NGOLogin />} />
+                <Route path="/ngo-dashboard" element={<NGODashboard />} />
                 <Route path="/go-green" element={<GoGreen />} />
                 <Route path="/news-events" element={<NewsEvents />} />
                 <Route path="/fundraiser" element={<Fundraiser />} />
