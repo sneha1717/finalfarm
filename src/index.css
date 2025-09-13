@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Kerala-themed natural color palette */
+    --background: 35 20% 97%;
+    --foreground: 120 15% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 120 15% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 120 15% 15%;
+
+    /* Kerala forest green as primary */
+    --primary: 142 48% 35%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 142 45% 55%;
+
+    /* Warm earth secondary */
+    --secondary: 35 25% 88%;
+    --secondary-foreground: 120 15% 15%;
+
+    /* Soft muted tones */
+    --muted: 35 15% 92%;
+    --muted-foreground: 120 10% 45%;
+
+    /* Golden accent like rice fields */
+    --accent: 45 85% 65%;
+    --accent-foreground: 120 15% 15%;
+
+    /* Terracotta warm tone */
+    --earth: 20 45% 55%;
+    --earth-foreground: 0 0% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 35 20% 85%;
+    --input: 35 15% 90%;
+    --ring: 142 48% 35%;
+
+    /* Kerala-inspired gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(142 48% 35%), hsl(142 45% 55%));
+    --gradient-hero: linear-gradient(135deg, hsl(142 48% 35%), hsl(45 85% 65%));
+    --gradient-earth: linear-gradient(180deg, hsl(35 25% 88%), hsl(35 20% 97%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(35 15% 98%));
+
+    /* Soft shadows inspired by tropical light */
+    --shadow-soft: 0 2px 10px hsl(120 15% 15% / 0.1);
+    --shadow-card: 0 4px 20px hsl(120 15% 15% / 0.12);
+    --shadow-floating: 0 8px 30px hsl(142 48% 35% / 0.15);
+
+    /* Smooth transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-gentle: all 0.2s ease-out;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark Kerala theme - evening forest tones */
+    --background: 120 15% 8%;
+    --foreground: 35 20% 95%;
+
+    --card: 120 15% 12%;
+    --card-foreground: 35 20% 95%;
+
+    --popover: 120 15% 12%;
+    --popover-foreground: 35 20% 95%;
+
+    --primary: 142 45% 55%;
+    --primary-foreground: 120 15% 8%;
+    --primary-glow: 142 48% 65%;
+
+    --secondary: 120 10% 18%;
+    --secondary-foreground: 35 20% 90%;
+
+    --muted: 120 8% 15%;
+    --muted-foreground: 35 15% 65%;
+
+    --accent: 45 75% 60%;
+    --accent-foreground: 120 15% 8%;
+
+    --earth: 20 35% 45%;
+    --earth-foreground: 35 20% 95%;
+
+    --destructive: 0 62.8% 50.6%;
+    --destructive-foreground: 35 20% 95%;
+
+    --border: 120 8% 20%;
+    --input: 120 8% 18%;
+    --ring: 142 45% 55%;
+
+    /* Dark gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(120 15% 12%), hsl(142 45% 25%));
+    --gradient-hero: linear-gradient(135deg, hsl(142 35% 25%), hsl(45 65% 45%));
+    --gradient-earth: linear-gradient(180deg, hsl(120 10% 15%), hsl(120 15% 8%));
+    --gradient-card: linear-gradient(145deg, hsl(120 15% 12%), hsl(120 12% 14%));
+
+    --shadow-soft: 0 2px 15px hsl(120 15% 5% / 0.4);
+    --shadow-card: 0 4px 25px hsl(120 15% 5% / 0.5);
+    --shadow-floating: 0 8px 40px hsl(142 45% 15% / 0.3);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
